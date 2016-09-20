@@ -1,19 +1,21 @@
 # Template file for 'couchdb'
 pkgname=couchdb
-version=1.6.1
-revision=7
+version=2.0.0
+revision=1
 wrksrc="apache-couchdb-$version"
-build_style=gnu-configure
+build_style=configure
+configure_args+=" --user couchdb"
+make_build_target+=" release"
 conf_files="/etc/couchdb/default.ini /etc/couchdb/local.ini"
-hostmakedepends="erlang pkg-config"
+hostmakedepends="erlang pkg-config help2man"
 makedepends="libressl-devel icu-devel js-devel libcurl-devel"
-depends="erlang"
+depends="erlang js"
 short_desc="A document-oriented database"
 maintainer="Gerardo Di Iorio <arete74@gmail.com>"
 license="Apache-2.0"
 homepage="http://couchdb.apache.org/"
 distfiles="http://www.apache.org/dist/couchdb/source/${version}/apache-couchdb-${version}.tar.gz"
-checksum=5a601b173733ce3ed31b654805c793aa907131cd70b06d03825f169aa48c8627
+checksum=ccaf3ce9cb06c50a73e091696e557e2a57c5ba02c5b299e1ac2f5b959ee96eca
 
 system_accounts="couchdb"
 couchdb_homedir="/var/lib/couchdb"
@@ -26,13 +28,20 @@ if [ "$CROSS_BUILD" ]; then
 	configure_args="--with-erlang=${XBPS_CROSS_BASE}/usr/lib/erlang/usr/include"
 fi
 
-pre_configure() {
-	sed -i 's|-Werror||g' src/couchdb/priv/Makefile.*
-if [ "$CROSS_BUILD" ]; then
-	sed -i '/FLAGS.*\(usr\|opt\)/s/.*/:/' configure
-fi
+do_install() {
+  # CouchDB 2.0.0 does not support "make install" yet
+  
+  cd rel/couchdb
+  vbin bin/couchdb
+  #vconf etc/default.ini
+  #vconf etc/local.ini
+  vinstall etc/default.ini 644 etc/couchdb
+  vinstall etc/local.ini 644 etc/couchdb
 }
 
 post_install() {
-	vsv couchdb
+  cd rel/couchdb
+  vlicense LICENSE
+  vman share/docs/couchdb.1
+  vsv couchdb
 }
