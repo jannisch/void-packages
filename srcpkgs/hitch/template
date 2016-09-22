@@ -1,0 +1,20 @@
+# Template file for 'hitch'
+pkgname=hitch
+version=1.4.0
+revision=1
+build_style=gnu-configure
+hostmakedepends="pkg-config"
+makedepends="libev-devel libressl-devel"
+short_desc="Libev-based high performance SSL/TLS proxy"
+maintainer="Jannis Christ <hello@jannis.ovh>"
+license="2-clause-BSD"
+homepage="https://hitch-tls.org"
+distfiles="https://hitch-tls.org/source/hitch-${version}.tar.gz"
+checksum=a2e788d4de76dae3cf7b06314e66825a6f0d3d695e602ae2f05c1a1772219041
+system_accounts="hitch"
+
+post_install() {
+	vman hitch.8
+	vlicense LICENSE
+	vsv hitch
+}
