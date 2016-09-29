@@ -1,19 +1,22 @@
 # Template file for 'couchdb'
 pkgname=couchdb
-version=1.6.1
-revision=7
+version=2.0.0
+revision=1
 wrksrc="apache-couchdb-$version"
-build_style=gnu-configure
-conf_files="/etc/couchdb/default.ini /etc/couchdb/local.ini"
-hostmakedepends="erlang pkg-config"
+build_style=configure
+#nopie=yes
+configure_args+=" -u couchdb"
+make_build_target+="release CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS"
+conf_files="/etc/couchdb/local.ini"
+hostmakedepends="erlang pkg-config help2man"
 makedepends="libressl-devel icu-devel js-devel libcurl-devel"
-depends="erlang"
+depends="erlang js"
 short_desc="A document-oriented database"
 maintainer="Gerardo Di Iorio <arete74@gmail.com>"
 license="Apache-2.0"
 homepage="http://couchdb.apache.org/"
 distfiles="http://www.apache.org/dist/couchdb/source/${version}/apache-couchdb-${version}.tar.gz"
-checksum=5a601b173733ce3ed31b654805c793aa907131cd70b06d03825f169aa48c8627
+checksum=ccaf3ce9cb06c50a73e091696e557e2a57c5ba02c5b299e1ac2f5b959ee96eca
 
 system_accounts="couchdb"
 couchdb_homedir="/var/lib/couchdb"
@@ -21,18 +24,31 @@ make_dirs="
 	/var/lib/couchdb 0700 couchdb couchdb
 	/var/log/couchdb 0750 couchdb couchdb"
 
+
+
 if [ "$CROSS_BUILD" ]; then
 	makedepends+=" erlang"
-	configure_args="--with-erlang=${XBPS_CROSS_BASE}/usr/lib/erlang/usr/include"
 fi
-
-pre_configure() {
-	sed -i 's|-Werror||g' src/couchdb/priv/Makefile.*
-if [ "$CROSS_BUILD" ]; then
-	sed -i '/FLAGS.*\(usr\|opt\)/s/.*/:/' configure
-fi
+do_install() {
+	echo $CFLAGS
+	echo $LDFLAGS
+	# CouchDB 2.0.0 does not support "make install" yet
+	vmkdir /usr/lib/
+	vmkdir /etc/couchdb/
+	vmkdir /var/lib/couchdb/
+	vinstall rel/couchdb/etc/local.ini  644 etc/couchdb/
+	#Copy datadirs config file
+	# remove local erts
+	rm -rf rel/couchdb/erts-8.1
+	vcopy rel/couchdb usr/lib/couchdb
+	#Copy datadirs config file
+	vcopy  ${FILESDIR}/datadirs.ini  usr/lib/couchdb/etc/datadirs.ini
+	# use system erts
+	ln -s /usr/lib/erlang/erts-8.1 "${DESTDIR}"/usr/lib/couchdb/erts-8.1
 }
 
 post_install() {
+	vlicense rel/couchdb/LICENSE
+	vman rel/couchdb/share/docs/couchdb.1
 	vsv couchdb
 }
