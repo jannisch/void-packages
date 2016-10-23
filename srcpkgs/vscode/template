@@ -1,0 +1,36 @@
+# Template file for 'vscode'
+pkgname=vscode
+version=1.6.1
+revision=1
+nopie=yes
+only_for_archs="x86_64 x86_64-musl"
+hostmakedepends="nodejs git python"
+makedepends="xproto libX11-devel"
+short_desc="Visual Studio Code - text editor built with Electron"
+maintainer="Jannis Christ <hello@jannis.ovh>"
+license="MIT"
+homepage="https://code.visualstudio.com"
+distfiles="https://github.com/Microsoft/vscode/archive/${version}.tar.gz"
+checksum=8041cb7d906b5160dcd269a5310bb55e419911a3fc050bff5bede91696067635
+
+
+pre_build() {
+	npm install -g node-gyp gulp
+}
+
+do_build() {
+	./scripts/npm.sh install
+	node --max_old_space_size=2048 /usr/bin/gulp vscode-linux-x64
+}
+do_install() {
+	cd ..
+	mv VSCode-linux-x64 vscode
+	vmkdir usr/lib
+	vmkdir usr/bin
+	vcopy vscode usr/lib/
+	ln -fs /usr/lib/vscode/bin/code-oss ${DESTDIR}/usr/bin/vscode
+}
+
+post_install() {
+	vlicense ../vscode/resources/app/LICENSE.txt
+}

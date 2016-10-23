@@ -1,0 +1,39 @@
+--- product.json	2016-10-13 17:20:53.000000000 +0200
++++ product.json.with_extensions	2016-10-24 02:04:55.813371552 +0200
+@@ -1,6 +1,6 @@
+ {
+ 	"nameShort": "Code - OSS",
+-	"nameLong": "Code - OSS",
++	"nameLong": "Visual Studio Code - OSS",
+ 	"applicationName": "code-oss",
+ 	"dataFolderName": ".vscode-oss",
+ 	"win32MutexName": "vscodeoss",
+@@ -12,5 +12,26 @@
+ 	"win32AppUserModelId": "Microsoft.CodeOSS",
+ 	"darwinBundleIdentifier": "com.visualstudio.code.oss",
+ 	"reportIssueUrl": "https://github.com/Microsoft/vscode/issues/new",
+-	"urlProtocol": "code-oss"
++	"urlProtocol": "code-oss",
++	"date": "2016-10-23T21:08:06.500Z",
++	"checksums": {
++		"vs/workbench/workbench.main.js": "OT3FHxXcL2u7H7Gcw03wJg",
++		"vs/workbench/workbench.main.css": "MjpV5nm5RMv/VTYUhsN49Q",
++		"vs/workbench/electron-browser/bootstrap/index.html": "A7FcwiFQwy0ydQR6MrrRrQ",
++		"vs/workbench/electron-browser/bootstrap/index.js": "dkbic1Y0gdcvjbbmYbbATQ"
++	},
++	"welcomePage": "http://go.microsoft.com/fwlink/?LinkId=723048",
++	"quality": "stable",
++	"extensionsGallery": {
++		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
++		"cacheUrl": "https://vscode.blob.core.windows.net/gallery/index",
++		"itemUrl": "https://marketplace.visualstudio.com/items"
++	},
++	"documentationUrl": "http://go.microsoft.com/fwlink/?LinkID=533484#vscode",
++	"releaseNotesUrl": "http://go.microsoft.com/fwlink/?LinkID=533483#vscode",
++	"twitterUrl": "http://go.microsoft.com/fwlink/?LinkID=533687",
++	"requestFeatureUrl": "http://go.microsoft.com/fwlink/?LinkID=533482",
++	"privacyStatementUrl": "http://go.microsoft.com/fwlink/?LinkID=528096&clcid=0x409",
++	"commit": "@COMMIT@",
++	"date": "@DATE@"
+ }
+\ No newline at end of file
